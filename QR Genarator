@@ -1,0 +1,143 @@
+import tkinter as tk
+from tkinter import ttk
+import qrcode
+import barcode
+from barcode.writer import ImageWriter
+from datetime import datetime
+from PIL import ImageTk
+
+class QRCodeProductBillingApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("QR Code Product Billing Software | Devloped By Aditya ")
+
+        # Variables for the first table (Product Details)
+        self.prd_id_var = tk.StringVar()
+        self.prd_code_var = tk.StringVar()
+        self.prd_category_var = tk.StringVar()
+        self.prd_types_var = tk.StringVar()
+        self.unit_of_measure_var = tk.StringVar()
+        self.closing_stock_var = tk.StringVar()
+        self.physical_stock_var = tk.StringVar()
+        self.trn_date_var = tk.StringVar()
+        self.user_id_var = tk.StringVar()
+        self.last_update_var = tk.StringVar()
+        self.difference_stock_var = tk.StringVar()
+        self.remarks_var = tk.StringVar()
+        self.qr_path_var = tk.StringVar()
+        self.barcode_path_var = tk.StringVar()
+
+        # Variables for the second table (Parameter Details)
+        self.parameter_id_var = tk.StringVar()
+        self.details_var = tk.StringVar()
+        self.head_var = tk.StringVar()
+        self.sr_no_var = tk.StringVar()
+
+        # Create and layout widgets
+        self.create_widgets()
+
+    def create_widgets(self):
+        # Entry widgets for the first table (Product Details)
+        table1_labels = ["PrdID", "PrdCode", "PrdCategory", "PrdTyps", "UnitofMeasure",
+                         "ClosingStock", "PhysicalStock", "TrnDate", "UserId",
+                         "Lastupdate", "DifferenceStock", "Remarks", "QrPath", "BarcodePath"]
+
+        for row, label in enumerate(table1_labels):
+            label_widget = ttk.Label(self.root, text=label)
+            label_widget.grid(row=row, column=0, padx=10, pady=5, sticky=tk.W)
+
+            entry_widget = ttk.Entry(self.root, textvariable=self.get_variable_by_label(label), style="TEntry")
+            entry_widget.grid(row=row, column=1, padx=10, pady=5)
+
+        # Entry widgets for the second table (Parameter Details)
+        table2_labels = ["ParameterID", "Details", "Head", "SrNo"]
+
+        for row, label in enumerate(table2_labels):
+            label_widget = ttk.Label(self.root, text=label)
+            label_widget.grid(row=row, column=2, padx=10, pady=5, sticky=tk.W)
+
+            entry_widget = ttk.Entry(self.root, textvariable=self.get_variable_by_label(label), style="TEntry")
+            entry_widget.grid(row=row, column=3, padx=10, pady=5)
+
+        # Button to generate QR code and Barcode
+        generate_button = ttk.Button(self.root, text="Generate QR Code and Barcode", command=self.generate_qr_code_and_barcode, style="TButton")
+        generate_button.grid(row=len(table1_labels), column=0, columnspan=4, pady=10)
+
+        # Display area for QR code and Barcode
+        self.qr_label = ttk.Label(self.root)
+        self.qr_label.grid(row=len(table1_labels) + 1, column=0, columnspan=2, pady=10)
+
+        self.barcode_label = ttk.Label(self.root)
+        self.barcode_label.grid(row=len(table1_labels) + 1, column=2, columnspan=2, pady=10)
+
+        # Style for customizing widget colors
+        style = ttk.Style()
+        style.configure("TEntry", background="white", foreground="black")
+        style.configure("TButton", background="black", foreground="white")
+
+    def get_variable_by_label(self, label):
+        return {
+            "PrdID": self.prd_id_var,
+            "PrdCode": self.prd_code_var,
+            "PrdCategory": self.prd_category_var,
+            "PrdTyps": self.prd_types_var,
+            "UnitofMeasure": self.unit_of_measure_var,
+            "ClosingStock": self.closing_stock_var,
+            "PhysicalStock": self.physical_stock_var,
+            "TrnDate": self.trn_date_var,
+            "UserId": self.user_id_var,
+            "Lastupdate": self.last_update_var,
+            "DifferenceStock": self.difference_stock_var,
+            "Remarks": self.remarks_var,
+            "QrPath": self.qr_path_var,
+            "BarcodePath": self.barcode_path_var,
+            "ParameterID": self.parameter_id_var,
+            "Details": self.details_var,
+            "Head": self.head_var,
+            "SrNo": self.sr_no_var
+        }[label]
+
+    def generate_qr_code_and_barcode(self):
+        # Create a QR code with product details (first table)
+        table1_qr_data = "\n".join(f"{label}: {variable.get()}" for label, variable in
+                                   [("PrdID", self.prd_id_var),
+                                    ("PrdCode", self.prd_code_var),
+                                    ("PrdCategory", self.prd_category_var),
+                                    ("PrdTyps", self.prd_types_var),
+                                    ("UnitofMeasure", self.unit_of_measure_var),
+                                    ("ClosingStock", self.closing_stock_var),
+                                    ("PhysicalStock", self.physical_stock_var),
+                                    ("TrnDate", self.trn_date_var),
+                                    ("UserId", self.user_id_var),
+                                    ("Lastupdate", self.last_update_var),
+                                    ("DifferenceStock", self.difference_stock_var),
+                                    ("Remarks", self.remarks_var),
+                                    ("QrPath", self.qr_path_var),
+                                    ("BarcodePath", self.barcode_path_var)]).strip()
+
+        qr = qrcode.QRCode(version=1, box_size=5, border=5)
+        qr.add_data(table1_qr_data)
+        qr.make(fit=True)
+
+        # Create an image from the QR code
+        img_qr = qr.make_image(fill_color="black", back_color="white")
+
+        # Convert the image to PhotoImage to display in Tkinter Label
+        img_qr_tk = ImageTk.PhotoImage(img_qr)
+        self.qr_label.configure(image=img_qr_tk)
+        self.qr_label.image = img_qr_tk  # Keep a reference to avoid garbage collection
+
+        # Create Barcode
+        table1_barcode_data = f"{self.prd_id_var.get()}-{self.prd_code_var.get()}"
+        code128 = barcode.get_barcode_class('code128')
+        barcode_image = code128(table1_barcode_data, writer=ImageWriter(), add_checksum=False).save("barcode")
+        
+        # Load and display the barcode image
+        img_barcode = ImageTk.PhotoImage(file="barcode.png")
+        self.barcode_label.configure(image=img_barcode)
+        self.barcode_label.image = img_barcode  # Keep a reference to avoid garbage collection
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = QRCodeProductBillingApp(root)
+    root.mainloop()
