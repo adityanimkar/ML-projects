@@ -1,0 +1,156 @@
+import tkinter as tk
+from tkinter import ttk
+import qrcode
+import cv2
+from pyzbar.pyzbar import decode
+from datetime import datetime
+
+class BillingSoftware:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Billing Software with QR Code Scanner | Devloped BY Aditya ")
+
+        
+        self.prd_id_var = tk.StringVar()
+        self.prd_code_var = tk.StringVar()
+        self.prd_category_var = tk.StringVar()
+        self.prd_types_var = tk.StringVar()
+        self.unit_of_measure_var = tk.StringVar()
+        self.closing_stock_var = tk.StringVar()
+        self.physical_stock_var = tk.StringVar()
+        self.trn_date_var = tk.StringVar()
+        self.user_id_var = tk.StringVar()
+        self.last_update_var = tk.StringVar()
+        self.difference_stock_var = tk.StringVar()
+        self.remarks_var = tk.StringVar()
+
+       
+        self.parameter_list_var = tk.StringVar()
+        self.parameter_id_var = tk.StringVar()
+        self.details_var = tk.StringVar()
+        self.head_var = tk.StringVar()
+        self.sr_no_var = tk.StringVar()
+
+       
+        self.create_widgets()
+
+       
+        self.vid = cv2.VideoCapture(0)
+        self.update()
+
+    def create_widgets(self):
+        # Entry widgets for Table 1 (Product Details)
+        table1_labels = ["PrdID", "PrdCode", "PrdCategory", "PrdTyps", "UnitofMeasure",
+                         "ClosingStock", "PhysicalStock", "TrnDate", "UserId",
+                         "Lastupdate", "DifferenceStock", "Remarks"]
+
+        for row, label in enumerate(table1_labels):
+            label_widget = ttk.Label(self.root, text=label)
+            label_widget.grid(row=row, column=0, padx=10, pady=5, sticky=tk.W)
+
+            entry_widget = ttk.Entry(self.root, textvariable=self.get_variable_by_label(label), state="readonly", style="TEntry")
+            entry_widget.grid(row=row, column=1, padx=10, pady=5, sticky=tk.W)
+
+        # Entry widgets for Table 2 (Parameter Details)
+        table2_labels = ["ParameterList", "ParameterID", "Details", "Head", "SrNo"]
+
+        for row, label in enumerate(table2_labels):
+            label_widget = ttk.Label(self.root, text=label)
+            label_widget.grid(row=row, column=2, padx=10, pady=5, sticky=tk.W)
+
+            entry_widget = ttk.Entry(self.root, textvariable=self.get_variable_by_label(label), state="readonly", style="TEntry")
+            entry_widget.grid(row=row, column=3, padx=10, pady=5, sticky=tk.W)
+
+        # Button to scan QR code
+        scan_button = ttk.Button(self.root, text="Scan QR Code", command=self.scan_qr_code, style="TButton")
+        scan_button.grid(row=len(table1_labels), column=0, columnspan=4, pady=10)
+
+        
+        style = ttk.Style()
+        style.configure("TEntry", background="white", foreground="black")
+        style.configure("TButton", background="black", foreground="white")
+
+    def get_variable_by_label(self, label):
+        return {
+            "PrdID": self.prd_id_var,
+            "PrdCode": self.prd_code_var,
+            "PrdCategory": self.prd_category_var,
+            "PrdTyps": self.prd_types_var,
+            "UnitofMeasure": self.unit_of_measure_var,
+            "ClosingStock": self.closing_stock_var,
+            "PhysicalStock": self.physical_stock_var,
+            "TrnDate": self.trn_date_var,
+            "UserId": self.user_id_var,
+            "Lastupdate": self.last_update_var,
+            "DifferenceStock": self.difference_stock_var,
+            "Remarks": self.remarks_var,
+            "ParameterList": self.parameter_list_var,
+            "ParameterID": self.parameter_id_var,
+            "Details": self.details_var,
+            "Head": self.head_var,
+            "SrNo": self.sr_no_var
+        }[label]
+
+    def scan_qr_code(self):
+       
+        ret, frame = self.vid.read()
+
+        if ret:
+           
+            decoded_objects = decode(frame)
+
+            if decoded_objects:
+                qr_data = decoded_objects[0].data.decode("utf-8")
+
+                # Split QR data into lines
+                lines = qr_data.split('\n')
+
+                # Update variables for Table 1
+                for line in lines[:len(self.get_table1_labels())]:
+                    label, value = line.split(": ", 1)
+                    if label in self.get_table1_labels():
+                        variable = self.get_variable_by_label(label)
+                        variable.set(value)
+
+                # Update variables for Table 2
+                for line in lines[len(self.get_table1_labels()):]:
+                    label, value = line.split(": ", 1)
+                    if label in self.get_table2_labels():
+                        variable = self.get_variable_by_label(label)
+                        variable.set(value)
+
+    def get_table1_labels(self):
+        return ["PrdID", "PrdCode", "PrdCategory", "PrdTyps", "UnitofMeasure",
+                "ClosingStock", "PhysicalStock", "TrnDate", "UserId",
+                "Lastupdate", "DifferenceStock", "Remarks"]
+
+    def get_table2_labels(self):
+        return ["ParameterList", "ParameterID", "Details", "Head", "SrNo"]
+
+    def update(self):
+        
+        ret, frame = self.vid.read()
+
+        if ret:
+            
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+            
+            img_tk = ImageTk.PhotoImage(image=tk.PhotoImage(data=cv2.imencode('.png', frame_rgb)[1].tobytes()))
+
+            
+            self.get_variable_by_label("PrdID").set(datetime.now().strftime("%Y%m%d%H%M%S"))
+            self.get_variable_by_label("TrnDate").set(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+            
+            self.root.after(10, self.update)
+
+    def __del__(self):
+        # Release the webcam when the object is deleted
+        if self.vid.isOpened():
+            self.vid.release()
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = BillingSoftware(root)
+    root.mainloop()
