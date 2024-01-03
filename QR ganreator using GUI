@@ -7,10 +7,19 @@ class Qr_Generator:
         self.root.title("Qr Genrator | Devloped By Aditya Nimkar")
         self.root.resizable(False,False)
         
-        title=Label(self.root,text ="  QR Code Generator",font=("lines new roman",40),bg='#053246',fg='white' ,anchor='w').place(x=0,y=0,relwidth=1)
+        
+        
+        title=Label(self.root,text ="  QR Code Generator",font=("lines new roman",20),bg='#000000',fg='white' ,anchor='w').place(x=0,y=0,relwidth=1)
+        
+        
+        
         prod_Frame=Frame(self.root,bd=5,relief=RIDGE,bg='white')
-        prod_Frame.place(x=30,y=90,width=500,height=500)
-        prod_title=Label(prod_Frame,text ="  Product Details ",font=("goudy old style",20),bg='#043256',fg='white' ).place(x=0,y=0,relwidth=1)
+        prod_Frame.place(x=30,y=90,width=400,height=600)
+        
+        
+        prod_title=Label(prod_Frame,text ="  Product Details Table 1 ",font=("goudy old style",10),bg='#000000',fg='white' ).place(x=0,y=0,relwidth=1)
+        
+        
 
         lbl_ID=Label(prod_Frame,text ="  Product ID ",font=("goudy old style",10),bg='White',anchor='w' ).place(x=20,y=60,relwidth=1)
         lbl_Code=Label(prod_Frame,text =" Product Code ",font=("Times new roman",10,'bold'),bg='White', anchor='w').place(x=20,y=100,relwidth=1)
@@ -31,21 +40,45 @@ class Qr_Generator:
         txt_Physical_stock=Entry(prod_Frame,font=("Times new roman",10,'bold'),bg='White', ).place(x=200,y=260,relwidth=1)
         txt_Date=Entry(prod_Frame,font=("Times new roman",10,'bold'),bg='White', ).place(x=200,y=300,relwidth=1)
         txt_serial_ID=Entry(prod_Frame,font=("Times new roman",10,'bold'),bg='White', ).place(x=200,y=340,relwidth=1)
+        
+        
+    
 
-        btn_generate=Button(prod_Frame,text='QR Genrate',font=("times new roman",18,'bold'),bg='#2196f3',fg='white').place(x=10,y=400,width=180,height=30)
-        btn_Clear=Button(prod_Frame,text='Clear',font=("times new roman",18,'bold'),bg='#607d8b',fg='white').place(x=300,y=400,width=120,height=30)
+        btn_generate=Button(prod_Frame,text='QR Genrate',font=("times new ",15,'bold'),bg='#3A3B3C',fg='white').place(x=10,y=400,width=120,height=30)
+        btn_Clear=Button(prod_Frame,text='Clear',font=("times new roman",15,'bold'),bg='#3A3B3C',fg='white').place(x=250,y=400,width=120,height=30)
+        
+        
+#        self.msg='QR Generated Successfully!!'
+ #       self. lbl_msg=Label(prod_Frame,text =self.msg,font=("Times new roman",20,),bg='White',fg='green' ).place(x=0,y=450,relwidth=1)
+        
+        prod_Frame=Frame(self.root,bd=5,relief=RIDGE,bg='white')
+        prod_Frame.place(x=450,y=90,width=350,height=500)
+        prod_title=Label(prod_Frame,text ="  Product Details Table 2",font=("goudy old style",10),bg='#000000',fg='white' ).place(x=0,y=0,relwidth=1)
+        
+        lbl_ID=Label(prod_Frame,text ="  Parameter ID ",font=("Times new roman",10 ,'bold'),bg='White',anchor='w' ).place(x=20,y=60,relwidth=2)
+        lbl_Code=Label(prod_Frame,text =" Details ",font=("Times new roman",10,'bold'),bg='White', anchor='w').place(x=20,y=100,relwidth=1)
+        lbl_Catagory=Label(prod_Frame,text =" Head ",font=("Times new roman",10,'bold'),bg='White',anchor='w' ).place(x=20,y=140,relwidth=1)
+        lbl_Type=Label(prod_Frame,text ="  Sr No ",font=("Times new roman",10,'bold'),bg='White',anchor='w' ).place(x=20,y=180,relwidth=1)
+        
+        
+        txt_ID=Entry(prod_Frame,font=("Times new roman",10 ,'bold'),bg='White' ).place(x=200,y=60,relwidth=2)
+        txt_Details=Entry(prod_Frame,font=("Times new roman",10,'bold'),bg='White' ).place(x=200,y=100,relwidth=1)
+        txt_Head=Entry(prod_Frame,font=("Times new roman",10,'bold'),bg='White').place(x=200,y=140,relwidth=1)
+        txt_Sr_No=Entry(prod_Frame,font=("Times new roman",10,'bold'),bg='White' ).place(x=200,y=180,relwidth=1)
 
-        self.msg='QR Generated Successfully!!'
-        self. lbl_msg=Label(prod_Frame,text =self.msg,font=("Times new roman",20,),bg='White',fg='green' ).place(x=0,y=450,relwidth=1)
+        prod_Frame=Frame(self.root,bd=6,relief=RIDGE,bg='White')
+        prod_Frame.place(x=500,y=325,width=250,height=250)
+        prod_title=Label(prod_Frame,text ="  QR Code ",font=("goudy old style",10),bg='#000000',fg='white' ).place(x=0,y=0,relwidth=1)
+        
+        prod_Frame=Frame(self.root,relief=RIDGE,bg='White')
+        prod_Frame.place(x=580,y=440,width=100,height=100)
+        self.lbl_msg=Label(prod_Frame,text =" NO QR  ",font=("goudy old style",10),bg='#800000',fg='white' ).place(x=0,y=0,relwidth=1)
+        
+        
+       
 
-       # qr_Frame=Frame(self.root,bd=5,relief=RIDGE,bg='white')
-      #  qr_Frame=Frame.place(x=600,y=100,width=250,height=500)
-      #  prod_title=Label(prod_Frame,text ="  Product Details ",font=("goudy old style",20),bg='#043256',fg='white' ).place(x=0,y=0,relwidth=1)
-
-       # self.qr_code=label(qr_Frame,text='No Qr code \n Available',font=("Times new roman",20,),bg='#3f51b5')
-        #self.qr_code.place(x=35,y=100,width=180,height=180)
-
-                                                                                     
+    
+                                                                                 
 
 root=Tk()
 obj =Qr_Generator(root)
