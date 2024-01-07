@@ -8,7 +8,7 @@ from datetime import datetime
 class QRCodeGeneratorApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("QR Code Generator")
+        self.root.title("QR Code Generator | By aditya ")
 
         # Initialize variables to store input data
         self.product_data = {}
@@ -114,127 +114,7 @@ class QRCodeGeneratorApp:
         label.image = img
         label.grid(row=0, column=0)
         
-        import tkinter as tk
-from tkinter import messagebox
-import qrcode
-from PIL import Image, ImageTk
-import json
-from datetime import datetime
-
-class QRCodeGeneratorApp:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("QR Code Generator")
-
-        # Initialize variables to store input data
-        self.product_data = {}
-        self.parameter_data = {}
-
-        # Create labels and entry fields for Table 1
-        self.labels_table1 = ["Product ID", "Product Code", "Product Category", "Product Type",
-                              "Unit of Measure", "Closing Stock", "Physical Stock", "Transaction Date",
-                              "Serial ID", "Last Update", "Difference Stock", "Remarks"]
-
-        self.entry_table1 = {}
-        for i, label in enumerate(self.labels_table1):
-            tk.Label(root, text=label).grid(row=i, column=0, padx=5, pady=5)
-            self.entry_table1[label] = tk.Entry(root)
-            self.entry_table1[label].grid(row=i, column=1, padx=5, pady=5)
-
-        # Create labels and entry fields for Table 2
-        self.labels_table2 = ["Parameter ID", "Details", "Head", "Serial Number", "Product Price", "Expiry Date"]
-
-        self.entry_table2 = {}
-        for i, label in enumerate(self.labels_table2):
-            tk.Label(root, text=label).grid(row=i, column=2, padx=5, pady=5)
-            self.entry_table2[label] = tk.Entry(root)
-            self.entry_table2[label].grid(row=i, column=3, padx=5, pady=5)
-
-        # Create Clear button
-        tk.Button(root, text="Clear", command=self.clear_data).grid(row=len(self.labels_table1) + 1, column=0, columnspan=2, pady=10)
-
-        # Create Generate QR Code button
-        tk.Button(root, text="Generate QR Code", command=self.generate_qr_code).grid(row=len(self.labels_table2) + 1, column=2, columnspan=2, pady=10)
-
-        # Create a frame to display QR code image
-        self.qr_code_frame = tk.Frame(root)
-        self.qr_code_frame.grid(row=0, column=4, rowspan=len(self.labels_table2) + 2, padx=10, pady=10)
-
-    def clear_data(self):
-        # Clear input fields
-        for entry in self.entry_table1.values():
-            entry.delete(0, tk.END)
-        for entry in self.entry_table2.values():
-            entry.delete(0, tk.END)
-
-    def validate_input(self):
-        # Check if all input fields are filled
-        for entry in self.entry_table1.values():
-            if entry.get() == "":
-                return False
-        for entry in self.entry_table2.values():
-            if entry.get() == "":
-                return False
-        return True
-
-    def generate_qr_code(self):
-        if not self.validate_input():
-            messagebox.showinfo("Error", "All fields are required.")
-            return
-
-        # Store input data
-        self.product_data = {label: entry.get() for label, entry in self.entry_table1.items()}
-        self.parameter_data = {label: entry.get() for label, entry in self.entry_table2.items()}
-
-        # Store input data in a file
-        self.store_data_in_file()
-
-        # Generate QR code
-        qr_data = json.dumps({"Product Data": self.product_data, "Parameter Data": self.parameter_data})
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        qr.add_data(qr_data)
-        qr.make(fit=True)
-
-        qr_code_img = qr.make_image(fill_color="black", back_color="white")
-
-        # Save QR code image in a file
-        qr_code_img.save("generated_qr_code.png")
-
-        # Display success message
-        messagebox.showinfo("Success", "QR code generated successfully.")
-
-        # Display QR code image in the frame
-        self.display_qr_code_image("generated_qr_code.png")
-
-    def store_data_in_file(self):
-        # Store data in a file with a timestamp
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        filename = f"input_data_{timestamp}.json"
-
-        with open(filename, "w") as file:
-            data = {"Product Data": self.product_data, "Parameter Data": self.parameter_data}
-            json.dump(data, file)
-
-    def display_qr_code_image(self, filename):
-        # Display QR code image in the frame
-        img = Image.open(filename)
-        img = img.resize((100, 100), Image.ANTIALIAS)
-        img = ImageTk.PhotoImage(img)
-
-        label = tk.Label(self.qr_code_frame, image=img)
-        label.image = img
-        label.grid(row=0, column=0)
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = QRCodeGeneratorApp(root)
-    root.mainloop()
-
+        
 
 if __name__ == "__main__":
     root = tk.Tk()
